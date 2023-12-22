@@ -1,0 +1,63 @@
+---
+- name: Create {{ podman_user_group }} group
+  ansible.builtin.group:
+    name: "{{ podman_user_group }}"
+    system: yes
+  register: group
+
+- name: Add ansible user to {{ podman_user_group }} group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: "{{ podman_user_group }}"
+    append: yes
+  notify: Reset connection
+
+- name: Create {{ podman_user_name }} user
+  ansible.builtin.user:
+    name: "{{ podman_user_name }}"
+    group: "{{ podman_user_group }}"
+    shell: /bin/nologin
+    system: yes
+  register: user
+
+- name: Add {{ podman_user_name }} user to systemd-journal group
+  ansible.builtin.user:
+    name: "{{ podman_user_name }}"
+    groups: systemd-journal
+    append: yes
+
+- name: Set {{ podman_user_name }} user facts
+  ansible.builtin.set_fact:
+    podman_user_home: "{{ user.home }}"
+    podman_user_uid: "{{ user.uid }}"
+    podman_user_gid: "{{ group.gid }}"
+
+- name: Add {{ podman_user_name }} user to subuid file
+  ansible.builtin.lineinfile:
+    path: /etc/subuid
+    regexp: "^{{ podman_user_name }}:.*"
+    line: "{{ podman_user_name }}:165536:65536"
+    create: true
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Add {{ podman_user_group }} group to subgid file
+  ansible.builtin.lineinfile:
+    path: /etc/subgid
+    regexp: "^{{ podman_user_group }}:.*"
+    line: "{{ podman_user_group }}:165536:65536"
+    create: true
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Enable lingering for {{ podman_user_name }} user
+  command:
+    cmd: "loginctl enable-linger {{ podman_user_name }}"
+    creates: "/var/lib/systemd/linger/{{ podman_user_name }}"
+  become: yes
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+

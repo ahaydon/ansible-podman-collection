@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Adam Haydon
+  description: Creates a systemd service to manage a Podman container.
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 22.04
+
+  galaxy_tags:
+    - podman
+    - systemd
+    - containers
+

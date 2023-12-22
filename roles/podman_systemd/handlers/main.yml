@@ -1,0 +1,13 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+  become: yes
+  listen: Restart service
+
+- name: Restart service
+  ansible.builtin.service:
+    name: "{{ podman_systemd_file }}"
+    state: restarted
+  become: yes
+

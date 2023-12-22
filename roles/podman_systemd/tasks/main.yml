@@ -1,0 +1,42 @@
+---
+- name: Lookup user UID
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ podman_systemd_user }}"
+  when: podman_systemd_uid is not defined
+
+- name: Set UID variable
+  ansible.builtin.set_fact:
+    podman_systemd_uid: "{{ getent_passwd[podman_systemd_user][1] }}"
+  when: podman_systemd_uid is not defined
+
+- name: Create systemd unit files directory
+  file:
+    path: "{{ podman_systemd_unit_path }}"
+    state: directory
+    mode: "0755"
+  become: yes
+
+- name: Create {{ podman_systemd_name }} service unit
+  ansible.builtin.template:
+    src: systemd-unit.service.j2
+    dest: "{{ [podman_systemd_unit_path, podman_systemd_file] | path_join }}"
+    mode: "0644"
+  become: yes
+  notify: Restart service
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable {{ podman_systemd_name }} service
+  ansible.builtin.systemd:
+    name: "{{ podman_systemd_file }}"
+    enabled: yes
+  become: yes
+
+- name: Start {{ podman_systemd_name }} service
+  ansible.builtin.systemd:
+    name:  "{{ podman_systemd_file }}"
+    state: started
+  become: yes
+

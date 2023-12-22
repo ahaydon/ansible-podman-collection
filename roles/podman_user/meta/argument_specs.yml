@@ -1,0 +1,20 @@
+---
+argument_specs:
+  main:
+    short_description: Main entrypoint for the podman_user role
+    description:
+      - This is the main entrypoint for the C(podman_user) role.
+    author: Adam Haydon
+    options:
+      podman_user_name:
+        type: str
+        required: true
+        description:
+          - Name of the user to be enabled for Podman.
+ 
+      podman_user_group:
+        type: str
+        default: "{{ podman_user_name }}"
+        description:
+          - Name of the primary group for the Podman user.
+

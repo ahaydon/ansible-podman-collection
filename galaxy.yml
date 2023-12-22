@@ -1,0 +1,19 @@
+namespace: ahaydon
+name: podman
+version: 0.1.0
+readme: README.md
+authors:
+  - Adam Haydon (https://github.com/ahaydon)
+description: Collection of roles and playbooks for managing Podman containers with systemd
+license_file: LICENSE
+tags:
+  - podman
+  - systemd
+  - containers
+dependencies: {}
+repository: https://github.com/ahaydon/ansible-podman-collection
+documentation: https://github.com/ahaydon/ansible-podman-collection
+homepage: https://github.com/ahaydon/ansible-podman-collection
+issues: https://github.com/ahaydon/ansible-podman-collectio/issues
+build_ignore: []
+

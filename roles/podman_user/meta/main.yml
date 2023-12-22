@@ -1,0 +1,16 @@
+galaxy_info:
+  author: Adam Haydon
+  description: Enables a user to run Podman rootless containers
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 22.04
+
+  galaxy_tags:
+    - podman
+    - containers
+

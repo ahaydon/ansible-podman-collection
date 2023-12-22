@@ -1,0 +1,94 @@
+---
+argument_specs:
+  main:
+    short_description: Main entrypoint for the podman_systemd role
+    description:
+      - This is the main entrypoint for the C(podman_systemd) role.
+    author: Adam Haydon
+    options:
+      podman_systemd_name:
+        type: str
+        required: true
+        description:
+          - The name of the systemd service.
+
+      podman_systemd_user:
+        type: str
+        required: true
+        description:
+          - The name of the user to run the container.
+
+      podman_systemd_image:
+        type: str
+        required: true
+        description:
+          - The image to use for the container.
+
+      podman_systemd_unit_path:
+        type: path
+        default: /usr/local/lib/systemd/system
+        description:
+          - Path to create the unit file.
+
+      podman_systemd_file:
+        type: str
+        default: container-{{ podman_systemd_name }}.service
+        description:
+          - Name of the systemd unit file.
+
+      podman_systemd_comment:
+        type: str
+        default: "{{ podman_systemd_file }}"
+        description:
+          - Comment to include in the header of the unit file.
+
+      podman_systemd_description:
+        type: str
+        default: Podman {{ podman_systemd_file }}
+        description:
+          - Description for the service.
+
+      podman_systemd_readonly:
+        type: bool
+        default: false
+        description:
+          - Mount the container’s root filesystem as read only.
+
+      podman_systemd_ports:
+        type: list
+        elements: str
+        default: []
+        description:
+          - List of ports to publish from the container.
+
+      podman_systemd_volumes:
+        type: list
+        elements: str
+        default: []
+        description:
+          - List of volumes to mount in the container.
+
+      podman_systemd_environment:
+        type: dict
+        default: {}
+        description:
+          - Environment variables and values to set in the container.
+
+      podman_systemd_network:
+        type: str
+        required: false
+        description:
+          - The podman network to use for the container.
+
+      podman_systemd_device:
+        type: path
+        required: false
+        description:
+          - Path of a device to attach to the container.
+
+      podman_systemd_uid:
+        type: int
+        required: false
+        description:
+          - UID of the podman container user. Looked up automatically if not defined.
+
