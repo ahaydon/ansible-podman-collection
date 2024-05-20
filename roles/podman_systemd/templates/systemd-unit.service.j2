@@ -7,8 +7,11 @@
 --replace
 --name {{ podman_systemd_name }}
 --log-driver journald
---read-only={{ podman_systemd_readonly }}
---env-host 
+--read-only={{ podman_systemd_readonly }} 
+
+{%- for var, value in podman_systemd_environment.items() %}
+ --env {{ var }}={{ value }}
+{% endfor -%}
 
 {%- for port in podman_systemd_ports %}
  --publish {{ port }}
