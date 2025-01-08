@@ -18,6 +18,7 @@
     group: "{{ podman_user_group }}"
     shell: /bin/nologin
     system: yes
+    create_home: no
   register: user
 
 - name: Add {{ podman_user_name }} user to systemd-journal group
